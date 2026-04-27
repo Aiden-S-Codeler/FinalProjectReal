@@ -1,0 +1,6 @@
+#AS 2nd minesweeper pseudocode
+
+define board maker function(intake board width, board height, min bombs(10% of spaces by base), and max bombs(100% of board by base))
+    create empty list named row
+    for each number in a range between 1 and board width
+        add 0 to 
