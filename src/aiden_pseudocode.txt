@@ -48,6 +48,8 @@ create mine field button class(includes height, width, and below value)
 define game function
     create the game screen
 
+    create the board
+
     for each tile in full board
         create a button corresponding to its coordinates
     
