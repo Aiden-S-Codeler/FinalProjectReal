@@ -1,37 +1,17 @@
-import pygame
 import tkinter as tk
 from faker import Faker
 
-def end(root, win_or_loss, word=""):
-    if win_or_loss == "win":
-        time_limit = 3000
-        message = "You win!"
-    else:
-        time_limit = 10000
-        message = "You lose!"
-    pygame.init()
-    screen = pygame.display.set_mode((2550, 1375))
-    font = pygame.font.SysFont("Arial", 150)
-    text_surface = font.render(message, True, (255, 255, 255))
-    text_rect = text_surface.get_rect(center=(2550 // 2, 1375 // 2))
-    word_font = pygame.font.SysFont("Arial", 100)
-    word_surface = word_font.render(f"The word was: {word}", True, (200, 200, 200))
-    word_rect = word_surface.get_rect(center=(2550 // 2, (1375 // 2) + 150))
-    end_time = pygame.time.get_ticks() + time_limit
-    running = True
-    while running:
-        if pygame.time.get_ticks() > end_time:
-            running = False
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                screen = pygame.display.set_mode((2550, 1375))
-        screen.fill((0, 0, 0))
-        screen.blit(text_surface, text_rect)
-        screen.blit(word_surface, word_rect)
-        pygame.display.flip()
-    pygame.quit()
-    root.destroy()
-
+def end(root, win_or_loss="loss", word=""):
+    popup = tk.Toplevel(root)
+    popup.minsize(2550, 1375)
+    popup.configure(bg="black")
+    message = "You win!" if win_or_loss == "win" else "You lose!"
+    time = 3000 if win_or_loss == "win" else 10000
+    tk.Label(popup, text=message, fg="white", bg="black", font=("Arial", 40)).pack(pady=20)
+    tk.Label(popup, text=f"The word was: {word}", fg="white", bg="black", font=("Arial", 20)).pack(pady=20)
+    root.update_idletasks()
+    popup.update_idletasks()
+    popup.after(time, lambda: (popup.destroy(), root.destroy()))
 
 def hangman():
     root = tk.Tk()
@@ -48,8 +28,13 @@ def hangman():
     btn6.grid(row=4, column=8)
     btn7.grid(row=4, column=10)
     btn8.grid(row=4, column=12)
-    close = tk.Button(root, text="Close the program", command=root.destroy).grid(row=10,column=1)
+    close = tk.Button(root, text="Close the program", command=root.destroy)
+    close.grid(row=10,column=1)
     root.mainloop()
+
+def finish(root):
+    root.destroy()
+    hangman()
 
 def choice(letter, btn, word, lbl, hangman_label, root, hangman_art):
     btn.destroy()
@@ -64,7 +49,7 @@ def choice(letter, btn, word, lbl, hangman_label, root, hangman_art):
     else:
         mistakes = hangman_art.index(hangman_label.cget("text"))
         mistakes += 1
-        if hangman_art.index(hangman_label.cget("text")) == 6:
+        if hangman_art.index(hangman_label.cget("text")) == 5:
             end(root, "loss", word)
         else:
             hangman_label.config(text=hangman_art[mistakes])
@@ -75,7 +60,7 @@ def guess(root, word, hangman_label, guess_entry, hangman_art):
     else:
         mistakes = hangman_art.index(hangman_label.cget("text"))
         mistakes += 1
-        if hangman_art.index(hangman_label.cget("text")) == 6:
+        if hangman_art.index(hangman_label.cget("text")) == 5:
             end(root, "loss", word)
         hangman_label.config(text=hangman_art[mistakes])
 
