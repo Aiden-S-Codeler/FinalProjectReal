@@ -1,19 +1,20 @@
 #AS 2nd minesweeper functions
 
 import random
-import pygame
+import tkinter as tk
 
-def board_maker(board_width, board_height, minbombs = 10, maxbombs = 15):
+def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbombs = 15):
 
     board = []
     all_bomb = 0
     while all_bomb < minbombs or all_bomb > maxbombs:
+        board = []
         all_bomb = 0
         for y in range(0, board_height):
             row = []
             for x in range(0, board_width):
-                number = random.randint(1, 8)
-                if number == 8:
+                number = random.randint(1, bomb_chance)
+                if number == bomb_chance:
                     row.append(1)
                 else:
                     row.append(0)
@@ -23,11 +24,6 @@ def board_maker(board_width, board_height, minbombs = 10, maxbombs = 15):
             for tile in line:
                 if tile == 1:
                     all_bomb += 1
-    
-    for wa in board:
-        print(wa)
-    
-    print("")
     
     detection = []
 
@@ -92,9 +88,48 @@ def board_maker(board_width, board_height, minbombs = 10, maxbombs = 15):
         
         detection[x] = d_line
     
-    print("end")
+    #for wa in detection:
+    #    print(wa)
 
-    for wa in board:
-        print(wa)
+    #print("")
 
-board_maker(10, 10)
+    #for wa in board:
+    #    print(wa)
+
+    return detection
+
+def minesweeper():
+    root = tk.Tk()
+
+    root.title("Minesweeper")
+    root.configure(background="#f3cc1d")
+
+    root.minsize(250,250)
+    root.maxsize(1500,1500)
+    root.geometry("600x600+100+100")
+
+    root.count = 0
+
+    def add():
+        root.count += 1
+        lbl['text'] = str(root.count)
+
+    def sub():
+        root.count -= 1
+        lbl['text'] = str(root.count)
+
+    btn1 = tk.Button(root, text='       ', command=add)
+    btn1.grid(row=4, column=1)
+
+    btn2 = tk.Button(root, text='       ', command=sub)
+    btn2.grid(row=4, column=2)
+
+    lbl = tk.Label(root, text="0")
+    lbl.grid(row=5, column=1, columnspan=2)
+
+    close = tk.Button(root, text="LEAVE", command=root.destroy)
+    close.grid(row=0, column=0)
+
+    root.mainloop()
+
+minesweeper()
