@@ -88,8 +88,8 @@ def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbo
         
         detection[x] = d_line
     
-    #for wa in detection:
-    #    print(wa)
+    for wa in detection:
+        print(wa)
 
     #print("")
 
@@ -98,38 +98,88 @@ def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbo
 
     return detection
 
-def minesweeper():
+def minesweeper(board_width, board_height, board):
     root = tk.Tk()
 
     root.title("Minesweeper")
-    root.configure(background="#f3cc1d")
+    root.configure(background="#003f18")
 
     root.minsize(250,250)
     root.maxsize(1500,1500)
     root.geometry("600x600+100+100")
 
-    root.count = 0
+    visited = []
 
-    def add():
-        root.count += 1
-        lbl['text'] = str(root.count)
+    def add(x, y):
+        
+        lbl['text'] = str(board[x][y])
+        game_board[x][y]['text'] = f' {board[x][y]}  '
 
-    def sub():
-        root.count -= 1
-        lbl['text'] = str(root.count)
+        visited.append(game_board[x][y])
 
-    btn1 = tk.Button(root, text='       ', command=add)
-    btn1.grid(row=4, column=1)
+        behind = True
+        forward = True
+        up = True
+        down = True
+        if y-1 < 0:
+            behind = False
+        if y+1 > board_width-1:
+            forward = False
+        if x-1 < 0:
+            up = False
+        if x+1 > board_height-1:
+            down = False
+                
+        if '0' in game_board[x][y]['text'] and behind == True:
+            if game_board[x][y-1] not in visited:
+                add(x, y-1)
+            if up == True:
+                if game_board[x-1][y-1] not in visited:
+                    add(x-1, y-1)
+            if down == True:
+                if game_board[x+1][y-1] not in visited:
+                    add(x+1, y-1)
+                
+        if '0' in game_board[x][y]['text'] and forward == True:
+            if game_board[x][y+1] not in visited:
+                add(x, y+1)
+            if up == True:
+                if game_board[x-1][y+1] not in visited:
+                    add(x-1, y+1)
+            if down == True:
+                if game_board[x+1][y+1] not in visited:
+                    add(x+1, y+1)
+        
+        if '0' in game_board[x][y]['text'] and up == True:
+            if game_board[x-1][y] not in visited:
+                add(x-1, y)
 
-    btn2 = tk.Button(root, text='       ', command=sub)
-    btn2.grid(row=4, column=2)
+        if '0' in game_board[x][y]['text'] and down == True:
+            if game_board[x+1][y] not in visited:
+                add(x+1, y)
+    
+    restart = tk.Button(root, text="RESTART", command=lambda: [root.destroy(), minesweeper(board_width, board_height, board_maker(board_width, board_height, 8, ((board_width*board_height)/100)*10, ((board_width*board_height)/100)*15))])
+    restart.grid(row=1, column=0)
+    
+    game_board = []
+
+    for x in range(0, board_width):
+        game_row = []
+        for y in range(0, board_height):
+            btn = tk.Button(root, text=f'     ', command=lambda x=x, y=y: add(x, y))
+            btn.grid(row=x+1, column=y+2)
+            game_row.append(btn)
+        game_board.append(game_row)
 
     lbl = tk.Label(root, text="0")
-    lbl.grid(row=5, column=1, columnspan=2)
+    lbl.grid(row=3, column=0)
 
     close = tk.Button(root, text="LEAVE", command=root.destroy)
     close.grid(row=0, column=0)
 
     root.mainloop()
 
-minesweeper()
+x = 20
+y = 20
+
+minesweeper(x, y, board_maker(x, y, 8, ((x*y)/100)*12, ((x*y)/100)*20))
