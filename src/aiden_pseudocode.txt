@@ -1,6 +1,87 @@
 #AS 2nd minesweeper pseudocode
 
-define board maker function(intake board width, board height, min bombs(10% of spaces by base), and max bombs(100% of board by base))
+define board maker function(intake board width, board height, min bombs(10% of spaces by base), and max bombs(15% of board by base))
+
     create empty list named row
     for each number in a range between 1 and board width
-        add 0 to 
+        add 0 to row list
+
+    create empty list named board
+    for each number in a range between 1 and board height
+        add a copy of the row list to board list
+    
+    for each tile in the full board
+        randomly generate number between 1 and 6
+        if the number is 6
+            make the tile a bomb
+        otherwise
+            move on to next tile
+    
+    for each tile on board
+        if the tile is a bomb
+            move on
+        otherwise
+            check all nearby tiles for bombs
+                for each tile that is a bomb
+                    add one to the value of the tile
+
+example board:
+0 0 0 1 1 1 0 0 0
+1 2 2 2 B 1 0 0 0
+1 B B 2 1 1 0 0 0
+3 B 3 1 0 0 0 1 1
+B 2 0 0 0 0 0 1 B
+1 1 0 0 0 0 0 1 1
+
+create mine field button class(includes height, width, and below value)
+    height is equal to height
+    width is equal to height
+    and below value is equal to below value
+
+    define click function
+        when the button is clicked
+        if value is a bomb
+            return a false value
+        otherwise
+            return below value
+
+define game function
+    create the game screen
+
+    create the board
+
+    for each tile in full board
+        create a button corresponding to its coordinates
+    
+    until player wins or loses
+        let player click a tile
+            if the button is false
+                player loses
+                game ends
+            if the button is a 0:
+                diplay value
+                game automatically clicks all surounding tiles
+                check if any tile is a zero
+                    if that tile is 0
+                        repeat from line 60
+                    otherwise
+                        display value
+                        move on
+            otherwise:
+                display value
+                move on
+            
+            if that was the last non bomb tile
+                player wins
+                let player put initials on leaderboard
+                next to name on leaderboard is time it took to complete game
+            otherwise
+                loop back from line 54
+
+    ask if player would like to play again
+    if yes
+        replay whole game
+    if no
+        go back to main screen
+    otherwise
+        ask again
