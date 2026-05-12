@@ -69,12 +69,15 @@ def main2():
                 elif event.key == pygame.K_RIGHT and snake_dir != (-cell, 0):
                     snake_dir = (cell, 0)
 
+        def go_back():
+            from main import main
+            main()
+
         # pdate Snake Position
         new_head = (snake_pos[0][0] + snake_dir[0], snake_pos[0][1] + snake_dir[1])
         # wrap around screen, spawns snake on other side
         new_head = (new_head[0] % (cell * grid), new_head[1] % (cell * grid))
         snake_pos.insert(0, new_head)
-
         # checks collision, 
         apple_center = spawn_apple()
         head_center = (snake_pos[0][0] + cell // 2, snake_pos[0][1] + cell // 2)
@@ -82,14 +85,11 @@ def main2():
         if head_center in [(segment[0] + cell // 2, segment[1] + cell // 2) for segment in snake_pos[1:]]:
             game_over_text = font.render(f"game over for you: {score}", True, "white")
             screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2))
-            def go_back():
-                pygame.display.flip()
-                from main import main
-                main()
-            go_back()
+            pygame.display.flip()
             pygame.time.wait(2000)
             running = True
             pygame.quit()
+            go_back()
             return score
         
         if head_center == apple_center:
@@ -127,6 +127,7 @@ def main2():
             pygame.time.wait(2000)
             running = True
             pygame.quit()
+            go_back()
             return score
 #LEAVE
 

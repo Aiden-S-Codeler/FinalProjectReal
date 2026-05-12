@@ -6,10 +6,12 @@ def end(root, win_or_loss="loss", word=""):
     root = tk.Tk()
     root.minsize(425, 375)
     root.configure(bg="black")
+    root.attributes("-fullscreen", True)
     message = "You win!" if win_or_loss == "win" else "You lose!"
     time = 3000 if win_or_loss == "win" else 10000
     tk.Label(root, text=message, fg="white", bg="black", font=("Arial", 40)).pack(pady=20)
     tk.Label(root, text=f"The word was: {word}", fg="white", bg="black", font=("Arial", 20)).pack(pady=20)
+    back_btn = tk.Button(root, text="Back to Hangman", command=lambda: [root.destroy(), hangman()], width=20).pack(pady=20)
     root.update_idletasks()
     root.after(time, lambda: root.destroy())
 
