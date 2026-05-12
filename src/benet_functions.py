@@ -2,22 +2,22 @@ import tkinter as tk
 from faker import Faker
 
 def end(root, win_or_loss="loss", word=""):
-    popup = tk.Toplevel(root)
-    popup.minsize(2550, 1375)
-    popup.configure(bg="black")
+    root.destroy()
+    root = tk.Tk()
+    root.minsize(425, 375)
+    root.configure(bg="black")
     message = "You win!" if win_or_loss == "win" else "You lose!"
     time = 3000 if win_or_loss == "win" else 10000
-    tk.Label(popup, text=message, fg="white", bg="black", font=("Arial", 40)).pack(pady=20)
-    tk.Label(popup, text=f"The word was: {word}", fg="white", bg="black", font=("Arial", 20)).pack(pady=20)
+    tk.Label(root, text=message, fg="white", bg="black", font=("Arial", 40)).pack(pady=20)
+    tk.Label(root, text=f"The word was: {word}", fg="white", bg="black", font=("Arial", 20)).pack(pady=20)
     root.update_idletasks()
-    popup.update_idletasks()
-    popup.after(time, lambda: (popup.destroy(), root.destroy()))
+    root.after(time, lambda: root.destroy())
 
 def hangman():
     root = tk.Tk()
     root.title("Hangman")
-    root.minsize(2550, 1375)
-    root.maxsize(2550, 1375)
+    root.minsize(425, 375)
+    root.maxsize(425, 375)
     btn4 = tk.Button(root, text="4", command=lambda: decide(root, 4, [btn4, btn5, btn6, btn7, btn8]))
     btn5 = tk.Button(root, text="5", command=lambda: decide(root, 5, [btn4, btn5, btn6, btn7, btn8]))
     btn6 = tk.Button(root, text="6", command=lambda: decide(root, 6, [btn4, btn5, btn6, btn7, btn8]))
