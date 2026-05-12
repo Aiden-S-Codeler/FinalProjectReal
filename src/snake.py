@@ -1,5 +1,8 @@
+from logging import root
+
 import pygame
 import random
+
 
 # start
 pygame.init()
@@ -79,8 +82,11 @@ def main2():
         if head_center in [(segment[0] + cell // 2, segment[1] + cell // 2) for segment in snake_pos[1:]]:
             game_over_text = font.render(f"game over for you: {score}", True, "white")
             screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2))
-            pygame.display.flip()
-            
+            def go_back():
+                pygame.display.flip()
+                from main import main
+                main()
+            go_back()
             pygame.time.wait(2000)
             running = True
             pygame.quit()
