@@ -1,5 +1,6 @@
 #AS 2nd minesweeper functions
 
+from logging import root
 import random
 import tkinter as tk
 
@@ -87,14 +88,9 @@ def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbo
                 d_line[y] = str(bomb_total)
         
         detection[x] = d_line
-    
-    for wa in detection:
-        print(wa)
 
-    #print("")
-
-    #for wa in board:
-    #    print(wa)
+    for line in detection:
+        print(line)
 
     return detection
 
@@ -106,16 +102,20 @@ def minesweeper(board_width, board_height, board):
     root.configure(background="#003f18")
 
     root.minsize(250,250)
-    root.maxsize(1500,1500)
     root.geometry("600x600+100+100")
 
     visited = []
 
+    all_bombs = []
+    
+
     def add(x, y):
 
-        if lbl['text'] == "GAME OVER":
+        if lbl['text'] == "GAME OVER" or lbl['text'] == "YOU WIN!":
             return
         elif game_board[x][y]['bg'] == '#0000ff':
+            return
+        elif game_board[x][y] in visited:
             return
         else:
             lbl['text'] = str(board[x][y])
@@ -129,11 +129,11 @@ def minesweeper(board_width, board_height, board):
             down = True
             if y-1 < 0:
                 behind = False
-            if y+1 > board_width-1:
+            if y+1 > board_height-1:
                 forward = False
             if x-1 < 0:
                 up = False
-            if x+1 > board_height-1:
+            if x+1 > board_width-1:
                 down = False
 
             if '0' in game_board[x][y]['text'] and behind == True:
@@ -196,9 +196,13 @@ def minesweeper(board_width, board_height, board):
                             game_board[u][d]['bg'] = 'black'
                 lbl['text'] = "GAME OVER"
                 return
+            
+            if len(visited) == (board_width*board_height)-len(all_bombs):
+                lbl['text'] = "YOU WIN!"
+                return
         
     def flag(x, y):
-        if lbl['text'] == "GAME OVER":
+        if lbl['text'] == "GAME OVER" or lbl['text'] == "YOU WIN!":
             return
         elif game_board[x][y]['text'] != '     ':
             return
@@ -208,8 +212,29 @@ def minesweeper(board_width, board_height, board):
             elif game_board[x][y]['bg'] == '#0000ff':
                 game_board[x][y]['bg'] = '#ffffff'
     
-    restart = tk.Button(root, text="RESTART", command=lambda: [root.destroy(), minesweeper(board_width, board_height, board_maker(board_width, board_height, 8, ((board_width*board_height)/100)*10, ((board_width*board_height)/100)*15))])
-    restart.grid(row=1, column=0)
+    def auto_win():
+        for x in range(board_width):
+            for y in range(board_height):
+                if board[x][y] != 'B' and game_board[x][y]['bg'] == '#ffffff':
+                    add(x, y)
+    
+    def auto_flag():
+        for x in range(board_width):
+            for y in range(board_height):
+                if board[x][y] == 'B' and game_board[x][y]['bg'] == '#ffffff':
+                    flag(x, y)
+    
+    def auto_lose():
+        for x in range(board_width):
+            for y in range(board_height):
+                if board[x][y] == 'B' and game_board[x][y]['bg'] == '#ffffff':
+                    add(x, y)
+    
+    def auto_unflag():
+        for x in range(board_width):
+            for y in range(board_height):
+                if board[x][y] == 'B' and game_board[x][y]['bg'] == '#0000ff':
+                    flag(x, y)
     
     game_board = []
 
@@ -223,15 +248,65 @@ def minesweeper(board_width, board_height, board):
             game_row.append(btn)
         game_board.append(game_row)
 
-    lbl = tk.Label(root, text="0")
-    lbl.grid(row=3, column=0)
+    for x in range(board_width):
+        for y in range(board_height):
+            if board[x][y] == 'B':
+                all_bombs.append(game_board[x][y])
 
-    close = tk.Button(root, text="LEAVE", command=root.destroy)
+    lbl = tk.Label(root)
+    lbl.grid(row=7, column=0)
+
+    separator = tk.Label(root, text="       ")
+    separator.grid(row=0, column=1)
+    separator['bg'] = "#003f18"
+
+    close = tk.Button(root, text="LEAVE", command=lambda: [root.destroy(), difficulty()])
     close.grid(row=0, column=0)
+
+    restart = tk.Button(root, text="RESTART", command=lambda: [root.destroy(), minesweeper(board_width, board_height, board_maker(board_width, board_height, 8, ((board_width*board_height)/100)*10, ((board_width*board_height)/100)*15))])
+    restart.grid(row=1, column=0)
+
+    #win = tk.Button(root, text="AUTO WIN", command=auto_win)
+    #win.grid(row=2, column=0)
+
+    #lose = tk.Button(root, text="AUTO LOSE", command=auto_lose)
+    #lose.grid(row=3, column=0)
+
+    #flagger = tk.Button(root, text="AUTO FLAG", command=auto_flag)
+    #flagger.grid(row=4, column=0)
+
+    #unflagger = tk.Button(root, text="AUTO UNFLAG", command=auto_unflag)
+    #unflagger.grid(row=5, column=0)
 
     root.mainloop()
 
-x = 20
-y = 20
+def difficulty():
+    root = tk.Tk()
 
-minesweeper(x, y, board_maker(x, y, 8, ((x*y)/100)*12, ((x*y)/100)*20))
+    root.title("Minesweeper Difficulty Select")
+
+    root.minsize(250,250)
+    root.geometry("600x600+100+100")
+
+    def choice(x, y):
+        root.destroy()
+        minesweeper(x, y, board_maker(x, y, 8, ((x*y)/100)*12, ((x*y)/100)*20))
+
+    easy = tk.Button(root, text="EASY 10x10", width=30, height=6, command=lambda: choice(10, 10))
+    easy.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
+
+    medium = tk.Button(root, text="MEDIUM 25x25", width=30, height=6, command=lambda: choice(25, 25))
+    medium.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+    hard = tk.Button(root, text="HARD 40x40", width=30, height=6, command=lambda: choice(40, 40))
+    hard.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+
+    def go_back():
+        root.destroy()
+        from main import main
+        main()
+
+    back = tk.Button(root, text="BACK", width=10, height=2, command=go_back)
+    back.place(relx=0.1, rely=0.1, anchor=tk.CENTER)
+
+    root.mainloop()
