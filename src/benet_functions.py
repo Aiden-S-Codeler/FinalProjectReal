@@ -28,7 +28,11 @@ def hangman():
     btn6.grid(row=4, column=8)
     btn7.grid(row=4, column=10)
     btn8.grid(row=4, column=12)
-    close = tk.Button(root, text="Close the program", command=root.destroy)
+    def go_back():
+        root.destroy()
+        from main import main
+        main()
+    close = tk.Button(root, text="Back to Menu", command=go_back)
     close.grid(row=10,column=1)
     root.mainloop()
 
@@ -146,5 +150,3 @@ def decide(root, num, buttons):
 def delete(buttons):
     for btn in buttons:
         btn.destroy()
-
-hangman()
