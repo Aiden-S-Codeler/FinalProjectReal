@@ -103,6 +103,7 @@ def minesweeper(board_width, board_height, board):
 
     root.minsize(250,250)
     root.geometry("600x600+100+100")
+    root.attributes("-fullscreen", True)
 
     visited = []
 
@@ -266,17 +267,17 @@ def minesweeper(board_width, board_height, board):
     restart = tk.Button(root, text="RESTART", command=lambda: [root.destroy(), minesweeper(board_width, board_height, board_maker(board_width, board_height, 8, ((board_width*board_height)/100)*10, ((board_width*board_height)/100)*15))])
     restart.grid(row=1, column=0)
 
-    #win = tk.Button(root, text="AUTO WIN", command=auto_win)
-    #win.grid(row=2, column=0)
+    win = tk.Button(root, text="AUTO WIN", command=auto_win)
+    win.grid(row=2, column=0)
 
-    #lose = tk.Button(root, text="AUTO LOSE", command=auto_lose)
-    #lose.grid(row=3, column=0)
+    lose = tk.Button(root, text="AUTO LOSE", command=auto_lose)
+    lose.grid(row=3, column=0)
 
-    #flagger = tk.Button(root, text="AUTO FLAG", command=auto_flag)
-    #flagger.grid(row=4, column=0)
+    flagger = tk.Button(root, text="AUTO FLAG", command=auto_flag)
+    flagger.grid(row=4, column=0)
 
-    #unflagger = tk.Button(root, text="AUTO UNFLAG", command=auto_unflag)
-    #unflagger.grid(row=5, column=0)
+    unflagger = tk.Button(root, text="AUTO UNFLAG", command=auto_unflag)
+    unflagger.grid(row=5, column=0)
 
     root.mainloop()
 
@@ -287,6 +288,7 @@ def difficulty():
 
     root.minsize(250,250)
     root.geometry("600x600+100+100")
+    root.attributes("-fullscreen", True)
 
     def choice(x, y):
         root.destroy()
