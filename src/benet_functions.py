@@ -4,7 +4,7 @@ from faker import Faker
 def end(root, win_or_loss="loss", word=""):
     root.destroy()
     root = tk.Tk()
-    root.minsize(425, 375)
+    root.minsize(800, 700)
     root.configure(bg="black")
     root.attributes("-fullscreen", True)
     message = "You win!" if win_or_loss == "win" else "You lose!"
@@ -18,7 +18,8 @@ def end(root, win_or_loss="loss", word=""):
 def hangman():
     root = tk.Tk()
     root.title("Hangman")
-    root.minsize(425, 375)
+    root.minsize(800, 700)
+    root.attributes("-fullscreen", True)
     lbl = tk.Label(root, text="Choose the word size: ", font=743)
     btn4 = tk.Button(root, text="4", width=4, height=4, font=743, command=lambda: decide(root, 4, [btn4, btn5, btn6, btn7, btn8, lbl]))
     btn5 = tk.Button(root, text="5", width=4, height=4, font=743, command=lambda: decide(root, 5, [btn4, btn5, btn6, btn7, btn8, lbl]))
@@ -83,7 +84,8 @@ def decide(root, num, buttons):
         "   +---+\n   |   |\n   O   |\n  /|\\  |\n  /    |\n       |\n=========",
         "   +---+\n   |   |\n   O   |\n  /|\\  |\n  / \\  |\n       |\n========="
     ]
-    hangman_label = tk.Label(root, text="   +---+\n   |   |\n       |\n       |\n       |\n       |\n=========", font=743)
+    hangman_label = tk.Label(root, text="   +---+\n   |   |\n       |\n       |\n       |\n       |\n=========")
+    hangman_label.config(font=743)
     hangman_label.grid(row=0, column=0)
     text = "_" * len(word)
     lbl = tk.Label(root, text=text, font=1500)
