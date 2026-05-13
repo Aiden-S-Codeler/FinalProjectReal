@@ -1,5 +1,7 @@
 import tkinter as tk
 from faker import Faker
+import csv
+from helper import *
 
 def end(root, win_or_loss="loss", word=""):
     root.destroy()
@@ -152,4 +154,8 @@ def delete(buttons):
     for btn in buttons:
         btn.destroy()
 
-hangman()
+def snake_high_score(score):
+    root = tk.Tk()
+    lbl = tk.Label(root, text="What are your initials?", font=1000)
+    initials_entry = tk.Entry(root, font=1000)
+    enter = tk.Button(root, text="")

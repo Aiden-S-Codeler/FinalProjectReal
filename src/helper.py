@@ -11,8 +11,6 @@ def csv_to_dict(path):
                 i = 0
                 current_line = {}
                 for column in header:
-                    if "[" in line[i] and "]" in line[i]: line[i] = strlistconvert(line[i])
-                    if "{" in line[i] and "}" in line[i]: line[i] = strlistconvert(listdictconvert(line[i]))
                     current_line[column] = line[i]
                     if line[i].isdigit(): current_line[column] = int(line[i])
                     i += 1
@@ -39,64 +37,3 @@ def save_csv(path, data):
             writer.writerows(cleaned_data)
     except FileNotFoundError: print("The file was not found. ")
     except Exception as e: print(f"You had a(n) {e} error. ")
-
-def choice_input(choices, prompt = ">"):
-    while True:
-        choice = input(prompt)
-        if choice in choices:
-            return choice
-        elif choice in ["idk", "i don't know", "i dont know"]:
-            return rand.choice(choices)
-        else:
-            print("That was an invalid input. Please try again. ")
-
-def int_input(prompt = ">"):
-    while True:
-        choice = input(prompt).lower().strip()
-        if choice.isdigit():
-            return int(choice)
-        elif choice in ["idk", "i don't know", "i dont know"]:
-            return rand.randint(0, 10000000)
-        print("That was an invalid input. Please try again. ")
-
-def txt_reader(path):
-    try:
-        with open(path) as file:
-            return file.read()
-    except FileNotFoundError:
-        print("The file was not found. ")
-    except Exception as e:
-        print(f"You had an {e}. ")
-        return ""
-
-def txt_saver(path, content):
-    try:
-        with open(path, "w") as document:
-            document.write(content)
-    except FileNotFoundError:
-        print("The file was not found. ")
-    except Exception as e:
-        print(f"You had an {e}. ")
-
-def strlistconvert(string):
-    string = string.strip("[]")  # remove brackets
-    if not string:
-        return []
-    strlist = []
-    temp = ""
-    for char in string:
-        if char != ",":
-            temp += char
-        else:
-            strlist.append(int(temp.strip()))
-            temp = ""
-    if temp:
-        strlist.append(int(temp.strip()))
-    return strlist
-
-def listdictconvert(listitem):
-    dictversion = {}
-    for item in listitem:
-        keypair = item.split(":")
-        dictversion[keypair[0]] = keypair[1]
-    return dictversion
