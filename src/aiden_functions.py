@@ -1,8 +1,26 @@
 #AS 2nd minesweeper functions
 
-from logging import root
 import random
 import tkinter as tk
+
+class tile_button(tk.Button):
+    def __init__(self, master, x, y, color, *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        self.x = x
+        self.y = y
+        self['bg'] = color
+        self.grid(row=x+1, column=y+2)
+        self.bind("<Button-1>", lambda event: add(x, y))
+
+        #for x in range(0, board_width):
+        #game_row = []
+        #for y in range(0, board_height):
+        #    btn = tk.Button(root, text=f'     ', command=lambda x=x, y=y: add(x, y))
+        #    btn.grid(row=x+1, column=y+2)
+        #    btn['bg'] = '#ffffff'
+        #    btn.bind("<Button-3>", lambda event, x=x, y=y: flag(x, y))
+        #    game_row.append(btn)
+        #game_board.append(game_row)
 
 def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbombs = 15):
 
@@ -89,9 +107,6 @@ def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbo
         
         detection[x] = d_line
 
-    for line in detection:
-        print(line)
-
     return detection
 
 def minesweeper(board_width, board_height, board):
@@ -109,6 +124,15 @@ def minesweeper(board_width, board_height, board):
 
     all_bombs = []
     
+    class tile_button(tk.Button):
+        def __init__(self, master, x, y, color, *args, **kwargs):
+            super().__init__(master, *args, **kwargs)
+            self.x = x
+            self.y = y
+            self['bg'] = color
+            self.grid(row=x+1, column=y+2)
+            self.bind("<Button-1>", lambda event: add(x, y))
+            self.bind("<Button-3>", lambda event: flag(x, y))
 
     def add(x, y):
 
@@ -119,7 +143,6 @@ def minesweeper(board_width, board_height, board):
         elif game_board[x][y] in visited:
             return
         else:
-            lbl['text'] = str(board[x][y])
             game_board[x][y]['text'] = f' {board[x][y]}  '
 
             visited.append(game_board[x][y])
@@ -242,10 +265,7 @@ def minesweeper(board_width, board_height, board):
     for x in range(0, board_width):
         game_row = []
         for y in range(0, board_height):
-            btn = tk.Button(root, text=f'     ', command=lambda x=x, y=y: add(x, y))
-            btn.grid(row=x+1, column=y+2)
-            btn['bg'] = '#ffffff'
-            btn.bind("<Button-3>", lambda event, x=x, y=y: flag(x, y))
+            btn = tile_button(root, x, y, '#ffffff', text=f'     ')
             game_row.append(btn)
         game_board.append(game_row)
 
@@ -263,21 +283,22 @@ def minesweeper(board_width, board_height, board):
 
     close = tk.Button(root, text="LEAVE", command=lambda: [root.destroy(), difficulty()])
     close.grid(row=0, column=0)
+    close['bg'] = "#ff9999"
 
     restart = tk.Button(root, text="RESTART", command=lambda: [root.destroy(), minesweeper(board_width, board_height, board_maker(board_width, board_height, 8, ((board_width*board_height)/100)*10, ((board_width*board_height)/100)*15))])
     restart.grid(row=1, column=0)
 
-    win = tk.Button(root, text="AUTO WIN", command=auto_win)
-    win.grid(row=2, column=0)
-
-    lose = tk.Button(root, text="AUTO LOSE", command=auto_lose)
-    lose.grid(row=3, column=0)
-
-    flagger = tk.Button(root, text="AUTO FLAG", command=auto_flag)
-    flagger.grid(row=4, column=0)
-
-    unflagger = tk.Button(root, text="AUTO UNFLAG", command=auto_unflag)
-    unflagger.grid(row=5, column=0)
+    #win = tk.Button(root, text="AUTO WIN", command=auto_win)
+    #win.grid(row=2, column=0)
+#
+    #lose = tk.Button(root, text="AUTO LOSE", command=auto_lose)
+    #lose.grid(row=3, column=0)
+#
+    #flagger = tk.Button(root, text="AUTO FLAG", command=auto_flag)
+    #flagger.grid(row=4, column=0)
+#
+    #unflagger = tk.Button(root, text="AUTO UNFLAG", command=auto_unflag)
+    #unflagger.grid(row=5, column=0)
 
     root.mainloop()
 
@@ -296,19 +317,23 @@ def difficulty():
 
     easy = tk.Button(root, text="EASY 10x10", width=30, height=6, command=lambda: choice(10, 10))
     easy.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
+    easy['bg'] = "#99ff99"
 
     medium = tk.Button(root, text="MEDIUM 25x25", width=30, height=6, command=lambda: choice(25, 25))
     medium.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    medium['bg'] = "#ffff99"
 
     hard = tk.Button(root, text="HARD 40x40", width=30, height=6, command=lambda: choice(40, 40))
     hard.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+    hard['bg'] = "#ff9999"
 
     def go_back():
         root.destroy()
-        from main import main
+        from menu import main
         main()
 
     back = tk.Button(root, text="BACK", width=10, height=2, command=go_back)
     back.place(relx=0.1, rely=0.1, anchor=tk.CENTER)
+    back['bg'] = "#ff9999"
 
     root.mainloop()

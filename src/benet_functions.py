@@ -30,9 +30,13 @@ def hangman():
     btn6.grid(row=4, column=8)
     btn7.grid(row=4, column=10)
     btn8.grid(row=4, column=12)
-    lbl.grid(row=3, column=8)
-    close = tk.Button(root, text="Close the program", font=743, width=16, height=3, command=root.destroy)
+    def go_back():
+        root.destroy()
+        from menu import main
+        main()
+    close = tk.Button(root, text="Back to Menu", command=go_back)
     close.grid(row=10,column=1)
+    close['bg'] = "#ff9999"
     root.mainloop()
 
 def finish(root):
