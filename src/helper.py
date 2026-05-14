@@ -1,4 +1,3 @@
-import random as rand
 import csv
 
 def csv_to_dict(path):

@@ -1,6 +1,5 @@
 import tkinter as tk
 from faker import Faker
-import csv
 from helper import *
 
 def end(root, win_or_loss="loss", word=""):
@@ -155,7 +154,29 @@ def delete(buttons):
         btn.destroy()
 
 def snake_high_score(score):
+    high_scores = csv_to_dict("docs/high_scores.csv")
     root = tk.Tk()
-    lbl = tk.Label(root, text="What are your initials?", font=1000)
+    lbl = tk.Label(root, text="What are your initials? (3 letters)", font=1000)
     initials_entry = tk.Entry(root, font=1000)
-    enter = tk.Button(root, text="")
+    enter = tk.Button(root, text="Enter", font=743, command=lambda: check())
+    def check():
+        entry = initials_entry.get()
+        if len(entry) == 3:
+            if entry in high_scores:
+                if score > high_scores[entry]:
+                    high_scores[entry] = score
+            else:
+                high_scores[entry] = score
+            save_csv("docs/high_scores.csv", high_scores)
+            root.destroy()
+
+def view_high_scores():
+    high_scores = csv_to_dict("docs/high_scores.csv")
+    root = tk.Tk()
+    if high_scores:
+        scores = high_scores.keys()
+        scores.sort()
+        lbl = tk.Label(root, text=f"1st: {scores[0]} - {high_scores[scores[0]]}\n2nd: {scores[1]} - {high_scores[scores[1]]}\n3rd: {scores[2]} - {high_scores[scores[2]]}")
+    else:
+        lbl = tk.Label(root, text="There are no high scores yet. ")
+    btn = tk.Button(root, text="Close", command=lambda: root.destroy())
