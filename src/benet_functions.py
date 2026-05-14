@@ -1,10 +1,11 @@
 import tkinter as tk
 from faker import Faker
+from helper import *
 
 def end(root, win_or_loss="loss", word=""):
     root.destroy()
     root = tk.Tk()
-    root.minsize(425, 375)
+    root.minsize(800, 700)
     root.configure(bg="black")
     root.attributes("-fullscreen", True)
     message = "You win!" if win_or_loss == "win" else "You lose!"
@@ -18,7 +19,8 @@ def end(root, win_or_loss="loss", word=""):
 def hangman():
     root = tk.Tk()
     root.title("Hangman")
-    root.minsize(425, 375)
+    root.minsize(800, 700)
+    root.attributes("-fullscreen", True)
     lbl = tk.Label(root, text="Choose the word size: ", font=743)
     btn4 = tk.Button(root, text="4", width=4, height=4, font=743, command=lambda: decide(root, 4, [btn4, btn5, btn6, btn7, btn8, lbl]))
     btn5 = tk.Button(root, text="5", width=4, height=4, font=743, command=lambda: decide(root, 5, [btn4, btn5, btn6, btn7, btn8, lbl]))
@@ -87,7 +89,8 @@ def decide(root, num, buttons):
         "   +---+\n   |   |\n   O   |\n  /|\\  |\n  /    |\n       |\n=========",
         "   +---+\n   |   |\n   O   |\n  /|\\  |\n  / \\  |\n       |\n========="
     ]
-    hangman_label = tk.Label(root, text="   +---+\n   |   |\n       |\n       |\n       |\n       |\n=========", font=743)
+    hangman_label = tk.Label(root, text="   +---+\n   |   |\n       |\n       |\n       |\n       |\n=========")
+    hangman_label.config(font=743)
     hangman_label.grid(row=0, column=0)
     text = "_" * len(word)
     lbl = tk.Label(root, text=text, font=1500)
@@ -154,4 +157,30 @@ def delete(buttons):
     for btn in buttons:
         btn.destroy()
 
-hangman()
+def snake_high_score(score):
+    high_scores = csv_to_dict("docs/high_scores.csv")
+    root = tk.Tk()
+    lbl = tk.Label(root, text="What are your initials? (3 letters)", font=1000)
+    initials_entry = tk.Entry(root, font=1000)
+    enter = tk.Button(root, text="Enter", font=743, command=lambda: check())
+    def check():
+        entry = initials_entry.get()
+        if len(entry) == 3:
+            if entry in high_scores:
+                if score > high_scores[entry]:
+                    high_scores[entry] = score
+            else:
+                high_scores[entry] = score
+            save_csv("docs/high_scores.csv", high_scores)
+            root.destroy()
+
+def view_high_scores():
+    high_scores = csv_to_dict("docs/high_scores.csv")
+    root = tk.Tk()
+    if high_scores:
+        scores = high_scores.keys()
+        scores.sort()
+        lbl = tk.Label(root, text=f"1st: {scores[0]} - {high_scores[scores[0]]}\n2nd: {scores[1]} - {high_scores[scores[1]]}\n3rd: {scores[2]} - {high_scores[scores[2]]}")
+    else:
+        lbl = tk.Label(root, text="There are no high scores yet. ")
+    btn = tk.Button(root, text="Close", command=lambda: root.destroy())
