@@ -3,6 +3,25 @@
 import random
 import tkinter as tk
 
+class tile_button(tk.Button):
+    def __init__(self, master, x, y, color, *args, **kwargs):
+        super().__init__(master, *args, **kwargs)
+        self.x = x
+        self.y = y
+        self['bg'] = color
+        self.grid(row=x+1, column=y+2)
+        self.bind("<Button-1>", lambda event: add(x, y))
+
+        #for x in range(0, board_width):
+        #game_row = []
+        #for y in range(0, board_height):
+        #    btn = tk.Button(root, text=f'     ', command=lambda x=x, y=y: add(x, y))
+        #    btn.grid(row=x+1, column=y+2)
+        #    btn['bg'] = '#ffffff'
+        #    btn.bind("<Button-3>", lambda event, x=x, y=y: flag(x, y))
+        #    game_row.append(btn)
+        #game_board.append(game_row)
+
 def board_maker(board_width, board_height, bomb_chance = 8, minbombs = 10, maxbombs = 15):
 
     board = []
@@ -105,6 +124,15 @@ def minesweeper(board_width, board_height, board):
 
     all_bombs = []
     
+    class tile_button(tk.Button):
+        def __init__(self, master, x, y, color, *args, **kwargs):
+            super().__init__(master, *args, **kwargs)
+            self.x = x
+            self.y = y
+            self['bg'] = color
+            self.grid(row=x+1, column=y+2)
+            self.bind("<Button-1>", lambda event: add(x, y))
+            self.bind("<Button-3>", lambda event: flag(x, y))
 
     def add(x, y):
 
@@ -237,10 +265,7 @@ def minesweeper(board_width, board_height, board):
     for x in range(0, board_width):
         game_row = []
         for y in range(0, board_height):
-            btn = tk.Button(root, text=f'     ', command=lambda x=x, y=y: add(x, y))
-            btn.grid(row=x+1, column=y+2)
-            btn['bg'] = '#ffffff'
-            btn.bind("<Button-3>", lambda event, x=x, y=y: flag(x, y))
+            btn = tile_button(root, x, y, '#ffffff', text=f'     ')
             game_row.append(btn)
         game_board.append(game_row)
 
