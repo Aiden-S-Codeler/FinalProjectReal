@@ -13,7 +13,6 @@ This is a collection of games meant to be used to pass time and provide competit
 - Snake
 - Hangman
 - Minesweeper
-- Checkers
 
 ## Instalation Instructions
 
