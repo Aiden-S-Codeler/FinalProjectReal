@@ -1,42 +1,51 @@
 import tkinter as tk
 from faker import Faker
+from helper import *
 
 def end(root, win_or_loss="loss", word=""):
-    popup = tk.Toplevel(root)
-    popup.minsize(2550, 1375)
-    popup.configure(bg="black")
+    root.destroy()
+    root = tk.Tk()
+    root.minsize(800, 700)
+    root.configure(bg="black")
+    root.attributes("-fullscreen", True)
     message = "You win!" if win_or_loss == "win" else "You lose!"
     time = 3000 if win_or_loss == "win" else 10000
-    tk.Label(popup, text=message, fg="white", bg="black", font=("Arial", 40)).pack(pady=20)
-    tk.Label(popup, text=f"The word was: {word}", fg="white", bg="black", font=("Arial", 20)).pack(pady=20)
+    tk.Label(root, text=message, fg="white", bg="black", font=("Arial", 40)).pack(pady=20)
+    tk.Label(root, text=f"The word was: {word}", fg="white", bg="black", font=("Arial", 20)).pack(pady=20)
+    back_btn = tk.Button(root, text="Back to Hangman", command=lambda: [root.destroy(), hangman()], width=20).pack(pady=20)
     root.update_idletasks()
-    popup.update_idletasks()
-    popup.after(time, lambda: (popup.destroy(), root.destroy()))
+    root.after(time, lambda: root.destroy())
 
 def hangman():
     root = tk.Tk()
     root.title("Hangman")
-    root.minsize(2550, 1375)
-    root.maxsize(2550, 1375)
-    btn4 = tk.Button(root, text="4", command=lambda: decide(root, 4, [btn4, btn5, btn6, btn7, btn8]))
-    btn5 = tk.Button(root, text="5", command=lambda: decide(root, 5, [btn4, btn5, btn6, btn7, btn8]))
-    btn6 = tk.Button(root, text="6", command=lambda: decide(root, 6, [btn4, btn5, btn6, btn7, btn8]))
-    btn7 = tk.Button(root, text="7", command=lambda: decide(root, 7, [btn4, btn5, btn6, btn7, btn8]))
-    btn8 = tk.Button(root, text="8", command=lambda: decide(root, 8, [btn4, btn5, btn6, btn7, btn8]))
+    root.minsize(800, 700)
+    root.attributes("-fullscreen", True)
+    lbl = tk.Label(root, text="Choose the word size: ", font=743)
+    btn4 = tk.Button(root, text="4", width=4, height=4, font=743, command=lambda: decide(root, 4, [btn4, btn5, btn6, btn7, btn8, lbl]))
+    btn5 = tk.Button(root, text="5", width=4, height=4, font=743, command=lambda: decide(root, 5, [btn4, btn5, btn6, btn7, btn8, lbl]))
+    btn6 = tk.Button(root, text="6", width=4, height=4, font=743, command=lambda: decide(root, 6, [btn4, btn5, btn6, btn7, btn8, lbl]))
+    btn7 = tk.Button(root, text="7", width=4, height=4, font=743, command=lambda: decide(root, 7, [btn4, btn5, btn6, btn7, btn8, lbl]))
+    btn8 = tk.Button(root, text="8", width=4, height=4, font=743, command=lambda: decide(root, 8, [btn4, btn5, btn6, btn7, btn8, lbl]))
     btn4.grid(row=4, column=4)
     btn5.grid(row=4, column=6)
     btn6.grid(row=4, column=8)
     btn7.grid(row=4, column=10)
     btn8.grid(row=4, column=12)
-    close = tk.Button(root, text="Close the program", command=root.destroy)
+    def go_back():
+        root.destroy()
+        from menu import main
+        main()
+    close = tk.Button(root, text="Back to Menu", command=go_back)
     close.grid(row=10,column=1)
+    close['bg'] = "#ff9999"
     root.mainloop()
 
 def finish(root):
     root.destroy()
     hangman()
 
-def choice(letter, btn, word, lbl, hangman_label, root, hangman_art):
+def choice(root, letter, btn, word, lbl, hangman_label, hangman_art):
     btn.destroy()
     blank_word = lbl.cget("text")
     if letter in word:
@@ -81,41 +90,42 @@ def decide(root, num, buttons):
         "   +---+\n   |   |\n   O   |\n  /|\\  |\n  / \\  |\n       |\n========="
     ]
     hangman_label = tk.Label(root, text="   +---+\n   |   |\n       |\n       |\n       |\n       |\n=========")
+    hangman_label.config(font=743)
     hangman_label.grid(row=0, column=0)
     text = "_" * len(word)
-    lbl = tk.Label(root, text=text)
+    lbl = tk.Label(root, text=text, font=1500)
     lbl.grid(row=5, column=1, columnspan=2)
-    guess_entry = tk.Entry(root, width=5)
+    guess_entry = tk.Entry(root, font=743)
     guess_entry.grid(row=6, column=1)
-    guess_btn = tk.Button(root, text="Guess", command=lambda: guess(root, word, hangman_label, guess_entry, hangman_art))
-    guess_btn.grid(row=6, column=2, columnspan=4)
-    a = tk.Button(root, text=" A ", command=lambda: choice("a", a, word, lbl, hangman_label, root, hangman_art))
-    b = tk.Button(root, text=" B ", command=lambda: choice("b", b, word, lbl, hangman_label, root, hangman_art))
-    c = tk.Button(root, text=" C ", command=lambda: choice("c", c, word, lbl, hangman_label, root, hangman_art))
-    d = tk.Button(root, text=" D ", command=lambda: choice("d", d, word, lbl, hangman_label, root, hangman_art))
-    e = tk.Button(root, text=" E ", command=lambda: choice("e", e, word, lbl, hangman_label, root, hangman_art))
-    f = tk.Button(root, text=" F ", command=lambda: choice("f", f, word, lbl, hangman_label, root, hangman_art))
-    g = tk.Button(root, text=" G ", command=lambda: choice("g", g, word, lbl, hangman_label, root, hangman_art))
-    h = tk.Button(root, text=" H ", command=lambda: choice("h", h, word, lbl, hangman_label, root, hangman_art))
-    i = tk.Button(root, text=" I ", command=lambda: choice("i", i, word, lbl, hangman_label, root, hangman_art))
-    j = tk.Button(root, text=" J ", command=lambda: choice("j", j, word, lbl, hangman_label, root, hangman_art))
-    k = tk.Button(root, text=" K ", command=lambda: choice("k", k, word, lbl, hangman_label, root, hangman_art))
-    l = tk.Button(root, text=" L ", command=lambda: choice("l", l, word, lbl, hangman_label, root, hangman_art))
-    m = tk.Button(root, text=" M ", command=lambda: choice("m", m, word, lbl, hangman_label, root, hangman_art))
-    n = tk.Button(root, text=" N ", command=lambda: choice("n", n, word, lbl, hangman_label, root, hangman_art))
-    o = tk.Button(root, text=" O ", command=lambda: choice("o", o, word, lbl, hangman_label, root, hangman_art))
-    p = tk.Button(root, text=" P ", command=lambda: choice("p", p, word, lbl, hangman_label, root, hangman_art))
-    q = tk.Button(root, text=" Q ", command=lambda: choice("q", q, word, lbl, hangman_label, root, hangman_art))
-    r = tk.Button(root, text=" R ", command=lambda: choice("r", r, word, lbl, hangman_label, root, hangman_art))
-    s = tk.Button(root, text=" S ", command=lambda: choice("s", s, word, lbl, hangman_label, root, hangman_art))
-    t = tk.Button(root, text=" T ", command=lambda: choice("t", t, word, lbl, hangman_label, root, hangman_art))
-    u = tk.Button(root, text=" U ", command=lambda: choice("u", u, word, lbl, hangman_label, root, hangman_art))
-    v = tk.Button(root, text=" V ", command=lambda: choice("v", v, word, lbl, hangman_label, root, hangman_art))
-    w = tk.Button(root, text=" W ", command=lambda: choice("w", w, word, lbl, hangman_label, root, hangman_art))
-    x = tk.Button(root, text=" X ", command=lambda: choice("x", x, word, lbl, hangman_label, root, hangman_art))
-    y = tk.Button(root, text=" Y ", command=lambda: choice("y", y, word, lbl, hangman_label, root, hangman_art))
-    z = tk.Button(root, text=" Z ", command=lambda: choice("z", z, word, lbl, hangman_label, root, hangman_art))
-    a.grid(row=10, column=10), root
+    guess_btn = tk.Button(root, text="Guess", width=5, height=4, command=lambda: guess(root, word, hangman_label, guess_entry, hangman_art))
+    guess_btn.grid(row=6, column=2)
+    a = tk.Button(root, text=" A ", font=743, width=8, height=4, command=lambda: choice(root, "a", a, word, lbl, hangman_label, hangman_art))
+    b = tk.Button(root, text=" B ", font=743, width=8, height=4, command=lambda: choice(root, "b", b, word, lbl, hangman_label, hangman_art))
+    c = tk.Button(root, text=" C ", font=743, width=8, height=4, command=lambda: choice(root, "c", c, word, lbl, hangman_label, hangman_art))
+    d = tk.Button(root, text=" D ", font=743, width=8, height=4, command=lambda: choice(root, "d", d, word, lbl, hangman_label, hangman_art))
+    e = tk.Button(root, text=" E ", font=743, width=8, height=4, command=lambda: choice(root, "e", e, word, lbl, hangman_label, hangman_art))
+    f = tk.Button(root, text=" F ", font=743, width=8, height=4, command=lambda: choice(root, "f", f, word, lbl, hangman_label, hangman_art))
+    g = tk.Button(root, text=" G ", font=743, width=8, height=4, command=lambda: choice(root, "g", g, word, lbl, hangman_label, hangman_art))
+    h = tk.Button(root, text=" H ", font=743, width=8, height=4, command=lambda: choice(root, "h", h, word, lbl, hangman_label, hangman_art))
+    i = tk.Button(root, text=" I ", font=743, width=8, height=4, command=lambda: choice(root, "i", i, word, lbl, hangman_label, hangman_art))
+    j = tk.Button(root, text=" J ", font=743, width=8, height=4, command=lambda: choice(root, "j", j, word, lbl, hangman_label, hangman_art))
+    k = tk.Button(root, text=" K ", font=743, width=8, height=4, command=lambda: choice(root, "k", k, word, lbl, hangman_label, hangman_art))
+    l = tk.Button(root, text=" L ", font=743, width=8, height=4, command=lambda: choice(root, "l", l, word, lbl, hangman_label, hangman_art))
+    m = tk.Button(root, text=" M ", font=743, width=8, height=4, command=lambda: choice(root, "m", m, word, lbl, hangman_label, hangman_art))
+    n = tk.Button(root, text=" N ", font=743, width=8, height=4, command=lambda: choice(root, "n", n, word, lbl, hangman_label, hangman_art))
+    o = tk.Button(root, text=" O ", font=743, width=8, height=4, command=lambda: choice(root, "o", o, word, lbl, hangman_label, hangman_art))
+    p = tk.Button(root, text=" P ", font=743, width=8, height=4, command=lambda: choice(root, "p", p, word, lbl, hangman_label, hangman_art))
+    q = tk.Button(root, text=" Q ", font=743, width=8, height=4, command=lambda: choice(root, "q", q, word, lbl, hangman_label, hangman_art))
+    r = tk.Button(root, text=" R ", font=743, width=8, height=4, command=lambda: choice(root, "r", r, word, lbl, hangman_label, hangman_art))
+    s = tk.Button(root, text=" S ", font=743, width=8, height=4, command=lambda: choice(root, "s", s, word, lbl, hangman_label, hangman_art))
+    t = tk.Button(root, text=" T ", font=743, width=8, height=4, command=lambda: choice(root, "t", t, word, lbl, hangman_label, hangman_art))
+    u = tk.Button(root, text=" U ", font=743, width=8, height=4, command=lambda: choice(root, "u", u, word, lbl, hangman_label, hangman_art))
+    v = tk.Button(root, text=" V ", font=743, width=8, height=4, command=lambda: choice(root, "v", v, word, lbl, hangman_label, hangman_art))
+    w = tk.Button(root, text=" W ", font=743, width=8, height=4, command=lambda: choice(root, "w", w, word, lbl, hangman_label, hangman_art))
+    x = tk.Button(root, text=" X ", font=743, width=8, height=4, command=lambda: choice(root, "x", x, word, lbl, hangman_label, hangman_art))
+    y = tk.Button(root, text=" Y ", font=743, width=8, height=4, command=lambda: choice(root, "y", y, word, lbl, hangman_label, hangman_art))
+    z = tk.Button(root, text=" Z ", font=743, width=8, height=4, command=lambda: choice(root, "z", z, word, lbl, hangman_label, hangman_art))
+    a.grid(row=10, column=10)
     b.grid(row=10, column=12)
     c.grid(row=10, column=14)
     d.grid(row=10, column=16)
@@ -147,4 +157,30 @@ def delete(buttons):
     for btn in buttons:
         btn.destroy()
 
-hangman()
+def snake_high_score(score):
+    high_scores = csv_to_dict("docs/high_scores.csv")
+    root = tk.Tk()
+    lbl = tk.Label(root, text="What are your initials? (3 letters)", font=1000)
+    initials_entry = tk.Entry(root, font=1000)
+    enter = tk.Button(root, text="Enter", font=743, command=lambda: check())
+    def check():
+        entry = initials_entry.get()
+        if len(entry) == 3:
+            if entry in high_scores:
+                if score > high_scores[entry]:
+                    high_scores[entry] = score
+            else:
+                high_scores[entry] = score
+            save_csv("docs/high_scores.csv", high_scores)
+            root.destroy()
+
+def view_high_scores():
+    high_scores = csv_to_dict("docs/high_scores.csv")
+    root = tk.Tk()
+    if high_scores:
+        scores = high_scores.keys()
+        scores.sort()
+        lbl = tk.Label(root, text=f"1st: {scores[0]} - {high_scores[scores[0]]}\n2nd: {scores[1]} - {high_scores[scores[1]]}\n3rd: {scores[2]} - {high_scores[scores[2]]}")
+    else:
+        lbl = tk.Label(root, text="There are no high scores yet. ")
+    btn = tk.Button(root, text="Close", command=lambda: root.destroy())

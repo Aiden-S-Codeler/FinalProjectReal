@@ -1,28 +1,34 @@
-# tknter menu that displays the two option: scored and unscored games, then within each it calls the file for each game
+from aiden_functions import difficulty
+from benet_functions import hangman
+from snake import snake_game as snake
 import tkinter as tk
-from snake import *
-from aiden_functions import *
-from benet_functions import *
-def tk_menu():
+
+def main():
+
     root = tk.Tk()
-    root.title("Game Menu")
 
-    def start_snake():
-        root.destroy()  
-        main2()  
+    root.title("Main Menu")
 
+    root.minsize(250,250)
+    root.geometry("600x600+100+100")
 
-    def start_aiden():
-        root.destroy()  
-        board_maker()  
+    root.attributes("-fullscreen", True)
 
-    def start_benet():
-        root.destroy()  
-        #bennets game func when made ()  
-    tk.Label(root, text="pick from tweegames", font=("Arial", 16)).pack (pady=20)
+    minesweeper = tk.Button(root, text="MINESWEEPER", width=90, height=20, command=lambda: [root.destroy(), difficulty()])
+    minesweeper.place(relx=0.35, rely=0.25, anchor=tk.CENTER)
+    minesweeper['bg'] = "#c2c2c2"
 
-    tk.Button(root, text="Snake Game (Scored)", command=start_snake, width=20).pack(pady=10)
-    tk.Button(root, text="minesweeper (scored)", command=start_aiden, width=20).pack(pady=10)
-    tk.Button(root, text="hangman (Unscored)", command=start_benet, width=20).pack(pady=10)
+    hangman_btn = tk.Button(root, text="HANGMAN", width=90, height=20, command=lambda: [root.destroy(), hangman()])
+    hangman_btn.place(relx=0.65, rely=0.25, anchor=tk.CENTER)
+    hangman_btn['bg'] = '#ffffff'
+
+    snake_btn = tk.Button(root, text="SNAKE", width=90, height=20, command=lambda: [root.destroy(), snake()])
+    snake_btn.place(relx=0.35, rely=0.55, anchor=tk.CENTER)
+    snake_btn['bg'] = "#b1dab3"
+
+    leave = tk.Button(root, text="LEAVE", width=90, height=20, command=lambda: root.destroy())
+    leave.place(relx=0.65, rely=0.55, anchor=tk.CENTER)
+    leave['bg'] = "#ffd0d0"
+
 
     root.mainloop()
